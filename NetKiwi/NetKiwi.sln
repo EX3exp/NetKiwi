@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetKiwi", "NetKiwi\NetKiwi.csproj", "{98B27F86-3593-4654-A29B-AB4ADA666606}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetKiwi.Test", "NetKiwi.Test\NetKiwi.Test.csproj", "{706EC686-28F7-4E99-9FF1-E046240AC19B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{98B27F86-3593-4654-A29B-AB4ADA666606}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98B27F86-3593-4654-A29B-AB4ADA666606}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98B27F86-3593-4654-A29B-AB4ADA666606}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98B27F86-3593-4654-A29B-AB4ADA666606}.Release|Any CPU.Build.0 = Release|Any CPU
+		{706EC686-28F7-4E99-9FF1-E046240AC19B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{706EC686-28F7-4E99-9FF1-E046240AC19B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{706EC686-28F7-4E99-9FF1-E046240AC19B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{706EC686-28F7-4E99-9FF1-E046240AC19B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6D6F0E8E-B712-498F-82C5-3D0437B4C548}
+	EndGlobalSection
+EndGlobal

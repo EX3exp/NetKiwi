@@ -20,7 +20,7 @@ jobs:
         dotnet-version: 8.x
     
     - name: Restore dependencies
-      run: nuget restore
+      run: nuget restore NetKiwi/NetKiwi/NetKiwi.csproj
 
     - name: Build
       run: |

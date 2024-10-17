@@ -22,7 +22,7 @@ jobs:
     
     - name: Restore dependencies - linux
       run: |
-        ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
+        sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
         nuget restore NetKiwi/NetKiwi/NetKiwi.csproj
 
     - name: Build - linux

@@ -24,11 +24,11 @@ jobs:
       with:
         dotnet-version: 8.x
     - name: Restore dependencies
-      run: nuget restore NetKiwi/NetKiwi.csproj
+      run: nuget restore NetKiwi/NetKiwi/NetKiwi.csproj
     - name: Build
       run: |
-        dotnet restore NetKiwi/NetKiwi.csproj
-        dotnet build NetKiwi/NetKiwi.csproj -r ${{ matrix.platform }}
+        dotnet restore NetKiwi/NetKiwi/NetKiwi.csproj
+        dotnet build NetKiwi/NetKiwi/NetKiwi.csproj -r ${{ matrix.platform }}
     
     - name: Test
-      run: dotnet test NetKiwi.Tests/NetKiwi.Tests.csproj
+      run: dotnet test NetKiwi/NetKiwi.Tests/NetKiwi.Tests.csproj

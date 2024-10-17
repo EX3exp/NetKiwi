@@ -22,9 +22,7 @@ jobs:
     
     - name: Restore dependencies - linux
       run: |
-        sudo apt update
-        sudo apt upgrade
-        sudo apt-get install libc6-dev
+        ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
         nuget restore NetKiwi/NetKiwi/NetKiwi.csproj
 
     - name: Build - linux

@@ -81,6 +81,12 @@ namespace NetKiwi.Backend
                 static extern IntPtr LoadLibrary(string dllToLoad);
                 ret = LoadLibrary(path);
             }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                [DllImport("libSystem.dylib", EntryPoint = "dlopen")]
+                static extern IntPtr dlopen(string fileName, int flags);
+                ret = dlopen(path, RTLD_NOW);
+            }
             else
             {
                 [DllImport("libdl.so", EntryPoint = "dlopen")]

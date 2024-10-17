@@ -21,7 +21,7 @@ namespace NetKiwi.Backend
     public class KiwiCAPIOSX: KiwiCAPIBase
     {
 
-        private const string dll_name = "libkiwi.0.19.0.dylib";
+        private const string dll_name = "libkiwi.dylib";
 
         // global functions
         [DllImport(dll_name, CallingConvention = CallingConvention.Cdecl)]

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using NetKiwi.Backend;
@@ -10,6 +11,7 @@ namespace NetKiwi
     {
         static string modelPath = "model/";
         private Kiwi _kiwi;
+        readonly KiwiCAPIBase kiwiCAPI;
         public Kiwi kiwi
         {
             get { return _kiwi; }
@@ -31,8 +33,25 @@ namespace NetKiwi
 
         public SharpKiwi()
         {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                kiwiCAPI = new KiwiCAPIWindows();
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                kiwiCAPI = new KiwiCAPILinux();
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                kiwiCAPI = new KiwiCAPIOSX();
+            }
+            else
+            {
+                throw new KiwiException("Unsupported OS");
+            }
+
             KiwiLoader.LoadDll(null);
-            builder = new KiwiBuilder(modelPath);
+            builder = new KiwiBuilder(kiwiCAPI, modelPath);
             this.kiwi = builder.Build();
         }
         public Result[] Analyze(string text)

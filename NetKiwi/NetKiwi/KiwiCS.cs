@@ -18,6 +18,8 @@ namespace NetKiwi.Backend
     using KiwiJoinerHandle = IntPtr;
     using KiwiMorphsetHandle = IntPtr;
     using KiwiPretokenizedHandle = IntPtr;
+
+
     internal class Utf8String : IDisposable
     {
         IntPtr iPtr;

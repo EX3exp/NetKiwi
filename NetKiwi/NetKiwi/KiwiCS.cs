@@ -155,13 +155,13 @@ namespace NetKiwi.Backend
     }
     internal class KiwiCAPI
     {
-#if !WINDOWS
+#if WINDOWS
         private const string subfolder_name = "win-";
         private const string dll_name = "kiwi.dll";
-#elif !OSX
+#elif OSX
         private const string subfolder_name = "mac-x86-x64";
         private const string dll_name = "libkiwi.dylib";
-#elif !LINUX
+#elif LINUX
         private const string subfolder_name = "linux-x86-x64";
         private const string dll_name = "libkiwi.so.0.19.0";
 #endif
@@ -200,7 +200,7 @@ namespace NetKiwi.Backend
             public uint subSentPosition; /* 인용부호나 괄호로 둘러싸인 하위 문장의 번호. 1부터 시작. 0인 경우 하위 문장이 아님을 뜻함 */
         }
 
-#if WINDOWS
+#if !WINDOWS
         [DllImport("libdl.so", EntryPoint = "dlopen")]
         private static extern IntPtr dlopen(string fileName, int flags);
 
@@ -222,13 +222,13 @@ namespace NetKiwi.Backend
             IntPtr ret = IntPtr.Zero;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-            #if !WINDOWS
+            #if WINDOWS
                 ret = LoadLibrary(path);
             #endif
             }
             else
             {
-            #if WINDOWS
+            #if !WINDOWS
                 ret = dlopen(path, RTLD_NOW);
             #endif
             }
@@ -592,7 +592,7 @@ namespace NetKiwi.Backend
             {
                 return ki.readItem.Item2 ?.Length ?? 0;
             }
-#if !WINDOWS
+#if WINDOWS
             KiwiCAPI.CopyMemory(buf, new Utf16String(ki.readItem.Item2).IntPtr, (uint)ki.readItem.Item2.Length * 2);
 
 
@@ -725,7 +725,7 @@ namespace NetKiwi.Backend
             {
                 return ki.readItem.Item2?.Length ?? 0;
             }
-#if WINDOWS
+#if !WINDOWS
             KiwiCAPI.memcpy(buf, new Utf16String(ki.readItem.Item2).IntPtr, (uint)ki.readItem.Item2.Length * 2);
 
 #else

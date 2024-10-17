@@ -31,4 +31,4 @@ jobs:
         dotnet build NetKiwi/NetKiwi/NetKiwi.csproj -r ${{ matrix.platform }}
     
     - name: Test
-      run: dotnet test NetKiwi/NetKiwi.Tests/NetKiwi.Tests.csproj
+      run: dotnet test NetKiwi/NetKiwi.Test/NetKiwi.Test.csproj

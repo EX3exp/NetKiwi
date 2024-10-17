@@ -59,6 +59,12 @@ namespace NetKiwi.Backend
                 CopyMemory(dest, src, count);
                 return IntPtr.Zero;
             }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                [DllImport("libSystem.dylib", EntryPoint = "memcpy")]
+                static extern IntPtr memcpy(IntPtr dest, IntPtr src, uint count);
+                return memcpy(dest, src, count);
+            }
             else
             {
                 [DllImport("libc.so.6", EntryPoint = "memcpy")]

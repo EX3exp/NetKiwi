@@ -13,25 +13,6 @@ namespace NetKiwi.Backend
 
     public abstract class KiwiCAPIBase
     {
-        public static string GetDllName()
-        {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                return "kiwi.dll";
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                return "libkiwi.so.0.19.0";
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                return "libkiwi.0.19.0.dylib";
-            }
-            else
-            {
-                throw new KiwiException("Unsupported OS");
-            }
-        }
             public static IntPtr LoadDll(string rootPath, string subfolder_name, string dll_name)
         {
             var is64 = IntPtr.Size == 8;

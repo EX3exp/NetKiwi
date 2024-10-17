@@ -11,24 +11,21 @@ on:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        platform: [windows-latest, ubuntu-22.04, macos-latest]
-    
-    runs-on: ${{ matrix.platform }}
+    runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v4
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.x
+    
     - name: Restore dependencies
-      run: nuget restore NetKiwi/NetKiwi/NetKiwi.csproj
+      run: nuget restore
+
     - name: Build
       run: |
-        dotnet restore NetKiwi/NetKiwi/NetKiwi.csproj
-        dotnet build NetKiwi/NetKiwi/NetKiwi.csproj -r ${{ matrix.platform }}
+        dotnet restore NetKiwi/NetKiwi/NetKiwi.csproj -r osx-x64
+        dotnet build NetKiwi/NetKiwi/NetKiwi.csproj -r osx-x64
     
     - name: Test
       run: dotnet test NetKiwi/NetKiwi.Test/NetKiwi.Test.csproj

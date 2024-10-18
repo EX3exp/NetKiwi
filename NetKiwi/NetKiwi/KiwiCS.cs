@@ -244,7 +244,14 @@ namespace NetKiwi.Backend
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                return (dllHandle = KiwiCAPIBase.LoadDll(path, "macos-x86-x64", "libkiwi.dylib")) != IntPtr.Zero;
+                if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+                {
+                    return (dllHandle = KiwiCAPIBase.LoadDll(path, "macos-arm64", "libkiwi.dylib")) != IntPtr.Zero;
+                }
+                else
+                {
+                    return (dllHandle = KiwiCAPIBase.LoadDll(path, "macos-x86-x64", "libkiwi.dylib")) != IntPtr.Zero;
+                }
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {

@@ -21,7 +21,7 @@ namespace NetKiwi.Backend
     public class KiwiCAPIOSXIntel: KiwiCAPIBase
     {
 
-        private const string dll_name = "runtimes/macos-arm64/lib/libkiwi.dylib";
+        private const string dll_name = "runtimes/macos-x86-x64/lib/libkiwi.dylib";
 
         // global functions
         [DllImport(dll_name, CallingConvention = CallingConvention.Cdecl)]

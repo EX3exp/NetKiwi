@@ -107,7 +107,7 @@ namespace NetKiwi.Backend
                 ret = DlopenMac(path, RTLD_NOW);
                 if (ret == IntPtr.Zero)
                 {
-                    throw new KiwiException($"Failed to load Kiwi library from {path} --> \n\t {DlerrorMac()}");
+                    throw new KiwiException($"Failed to load Kiwi library from {path} --> \n\t {Marshal.PtrToStringAuto(DlerrorMac())}");
                 }
             }
             else
@@ -115,7 +115,7 @@ namespace NetKiwi.Backend
                 ret = DlopenLinux(path, RTLD_NOW);
                 if (ret == IntPtr.Zero)
                 {
-                    throw new KiwiException($"Failed to load Kiwi library from {path} --> \n\t {DlerrorLinux()}");
+                    throw new KiwiException($"Failed to load Kiwi library from {path} --> \n\t {Marshal.PtrToStringAuto(DlerrorLinux())}");
                 }
             }
             

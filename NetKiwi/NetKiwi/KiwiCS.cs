@@ -381,6 +381,14 @@ namespace NetKiwi.Backend
                 KiwiCAPI.Typo_close(inst);
             }
         }
+
+        public void Dispose()
+        {
+            if (inst != null && !readOnly)
+            {
+                KiwiCAPI.Typo_close(inst);
+            }
+        }
     }
 
     public class KiwiBuilder
@@ -485,6 +493,14 @@ namespace NetKiwi.Backend
                 if (KiwiCAPI.Builder_close(inst) < 0) throw new KiwiException(Marshal.PtrToStringAnsi(KiwiCAPI.Error()));
             }
         }
+
+        public void Dispose()
+        {
+            if (inst != IntPtr.Zero)
+            {
+                if (KiwiCAPI.Builder_close(inst) < 0) throw new KiwiException(Marshal.PtrToStringAnsi(KiwiCAPI.Error()));
+            }
+        }
     }
 
     public class KiwiJoiner
@@ -508,6 +524,14 @@ namespace NetKiwi.Backend
         }
 
         ~KiwiJoiner()
+        {
+            if (inst != IntPtr.Zero)
+            {
+                if (KiwiCAPI.Joiner_close(inst) < 0) throw new KiwiException(Marshal.PtrToStringAnsi(KiwiCAPI.Error()));
+            }
+        }
+
+        public void Dispose()
         {
             if (inst != IntPtr.Zero)
             {
@@ -679,6 +703,14 @@ namespace NetKiwi.Backend
         }
 
         ~Kiwi()
+        {
+            if (inst != IntPtr.Zero)
+            {
+                if (KiwiCAPI.Close(inst) < 0) throw new KiwiException(Marshal.PtrToStringAnsi(KiwiCAPI.Error()));
+            }
+        }
+
+        public void Dispose()
         {
             if (inst != IntPtr.Zero)
             {

@@ -5,7 +5,7 @@ namespace NetKiwi
     /// <summary>
     /// Main Class for Kiwi C# wrapper. 
     /// </summary>
-    public class SharpKiwi
+    public class SharpKiwi: IDisposable
     {
         static string modelPath = "model/";
         private Kiwi _kiwi;
@@ -115,7 +115,17 @@ namespace NetKiwi
             return words;
         }
 
-        
+        ~SharpKiwi()
+        {
+            _kiwi.Dispose();
+            _kiwiBuilder.Dispose();
+        }
 
+        void IDisposable.Dispose()
+        {
+            _kiwi.Dispose();
+            _kiwiBuilder.Dispose();
+            
+        }
     }
 }

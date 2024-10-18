@@ -484,11 +484,18 @@ namespace NetKiwi.Backend
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                KiwiCAPI = new KiwiCAPIOSX();
+                KiwiCAPI = new KiwiCAPIWindows();
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                KiwiCAPI = new KiwiCAPIOSX();
+                if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+                {
+                    KiwiCAPI = new KiwiCAPIOSXArm();
+                }
+                else
+                {
+                    KiwiCAPI = new KiwiCAPIOSXIntel();
+                }
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {

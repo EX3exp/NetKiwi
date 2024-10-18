@@ -18,10 +18,10 @@ namespace NetKiwi.Backend
     using KiwiMorphsetHandle = IntPtr;
     using KiwiPretokenizedHandle = IntPtr;
 
-    public class KiwiCAPIOSX: KiwiCAPIBase
+    public class KiwiCAPIOSXArm: KiwiCAPIBase
     {
 
-        private const string dll_name = "libkiwi.dylib";
+        private const string dll_name = "runtimes/macos-arm64/lib/libkiwi.dylib";
 
         // global functions
         [DllImport(dll_name, CallingConvention = CallingConvention.Cdecl)]

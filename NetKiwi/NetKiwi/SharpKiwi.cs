@@ -43,7 +43,15 @@ namespace NetKiwi
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                kiwiCAPI = new KiwiCAPIOSX();
+                if (RuntimeInformation.OSArchitecture == Architecture.X64)
+                {
+                    kiwiCAPI = new KiwiCAPIOSXArm();
+                }
+                else
+                {
+                    kiwiCAPI = new KiwiCAPIOSXIntel();
+                }
+                    
             }
             else
             {

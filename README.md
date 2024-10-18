@@ -4,7 +4,7 @@
 - 🥝Current Kiwi Version: `0.19.0`
 
 ## 🥝 Install
-
+    dotnet add package NetKiwi
 ## 🥝 Licence
 - Kiwi: LGPL 3.0
 

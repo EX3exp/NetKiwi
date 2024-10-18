@@ -72,6 +72,23 @@ namespace NetKiwi.Backend
                 return memcpy(dest, src, count);
             }
         }
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern IntPtr LoadLibrary(string dllToLoad);
+
+        [DllImport("libSystem.dylib", EntryPoint = "dlopen")]
+        private static extern IntPtr DlopenMac(string fileName, int flags);
+
+        [DllImport("libSystem.dylib", EntryPoint = "dlerror")]
+        private static extern IntPtr DlerrorMac();
+
+
+        [DllImport("libdl.so", EntryPoint = "dlopen")]
+        private static extern IntPtr DlopenLinux(string fileName, int flags);
+
+        [DllImport("libdl.so", EntryPoint = "dlerror")]
+        private static extern IntPtr DlerrorLinux();
+
         public static IntPtr LoadKiwi(string path)
         {
             IntPtr ret = IntPtr.Zero;
@@ -80,23 +97,28 @@ namespace NetKiwi.Backend
                 [DllImport("kernel32.dll")]
                 static extern IntPtr LoadLibrary(string dllToLoad);
                 ret = LoadLibrary(path);
+                if (ret == IntPtr.Zero)
+                {
+                    throw new KiwiException($"Failed to load Kiwi library from {path}"); // currently kiwi works very fine in windows, not try to parse error message
+                }
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                [DllImport("libSystem.dylib", EntryPoint = "dlopen")]
-                static extern IntPtr dlopen(string fileName, int flags);
-                ret = dlopen(path, RTLD_NOW);
+                ret = DlopenMac(path, RTLD_NOW);
+                if (ret == IntPtr.Zero)
+                {
+                    throw new KiwiException($"Failed to load Kiwi library from {path} --> \n\t {DlerrorMac()}");
+                }
             }
             else
             {
-                [DllImport("libdl.so", EntryPoint = "dlopen")]
-                static extern IntPtr dlopen(string fileName, int flags);
-                ret = dlopen(path, RTLD_NOW);
+                ret = DlopenLinux(path, RTLD_NOW);
+                if (ret == IntPtr.Zero)
+                {
+                    throw new KiwiException($"Failed to load Kiwi library from {path} --> \n\t {DlerrorLinux()}");
+                }
             }
-            if (ret == IntPtr.Zero)
-            {
-                throw new KiwiException("Failed to load Kiwi library from " + path);
-            }
+            
             return ret;
         }
 

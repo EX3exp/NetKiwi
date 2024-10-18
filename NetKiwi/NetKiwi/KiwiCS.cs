@@ -1,23 +1,36 @@
-﻿using System;
+﻿using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.IO;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Reflection;
+
 
 namespace NetKiwi.Backend
 {
-    using CString = IntPtr;
-    using KiwiHandle = IntPtr;
+    // based on https://github.com/bab2min/kiwi-gui
+
+    /*
+     Copyright (C) 2024 Min-chul Lee
+ 
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+ 
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU Lesser General Public License for more details.
+ 
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program. If not, see <http://www.gnu.org/licenses/>.
+     
+     */
+
     using KiwiBuilderHandle = IntPtr;
-    using KiwiResHandle = IntPtr;
-    using KiwiWsHandle = IntPtr;
-    using KiwiTypoHandle = IntPtr;
+    using KiwiHandle = IntPtr;
     using KiwiJoinerHandle = IntPtr;
-    using KiwiMorphsetHandle = IntPtr;
-    using KiwiPretokenizedHandle = IntPtr;
+    using KiwiResHandle = IntPtr;
+    using KiwiTypoHandle = IntPtr;
+    using KiwiWsHandle = IntPtr;
 
 
     internal class Utf8String : IDisposable
@@ -143,6 +156,9 @@ namespace NetKiwi.Backend
         }
     }
 
+    /// <summary>
+    /// Kiwi Model's output<br></br>
+    /// </summary>
     public struct Result
     {
         public Token[] morphs;
@@ -155,23 +171,79 @@ namespace NetKiwi.Backend
         public float score, posScore;
         public int freq;
     }
-    
 
+
+    /// <summary>
+    /// Token Class<br></br>
+    /// </summary>
     public struct Token
     {
+        /// <summary>
+        /// Target Morpheme<br></br>
+        /// 형태소
+        /// </summary>
         public string form;
+        /// <summary>
+        /// Tag<br></br>
+        /// 태그
+        /// </summary>
         public string tag;
-        public uint chrPosition; /* 시작 위치(UTF16 문자 기준) */
-        public uint wordPosition; /* 어절 번호(공백 기준)*/
-        public uint sentPosition; /* 문장 번호*/
-        public uint lineNumber; /* 줄 번호*/
-        public ushort length; /* 길이(UTF16 문자 기준) */
-        public byte senseId; /* 의미 번호 */
-        public float score; /* 해당 형태소의 언어모델 점수 */
-        public float typoCost; /* 오타가 교정된 경우 오타 비용. 그렇지 않은 경우 0 */
-        public uint typoFormId; /* 교정 전 오타의 형태에 대한 정보 (typoCost가 0인 경우 의미 없음) */
-        public uint pairedToken; /* SSO, SSC 태그에 속하는 형태소의 경우 쌍을 이루는 반대쪽 형태소의 위치(-1인 경우 해당하는 형태소가 없는 것을 뜻함) */
-        public uint subSentPosition; /* 인용부호나 괄호로 둘러싸인 하위 문장의 번호. 1부터 시작. 0인 경우 하위 문장이 아님을 뜻함 */
+        /// <summary>
+        /// Start position(UTF16 characters)<br></br>
+        /// 시작 위치(UTF16 문자 기준)
+        /// </summary>
+        public uint chrPosition;
+        /// <summary>
+        /// Index of the word (based on spaces)<br></br>
+        /// 어절 번호(공백 기준)
+        /// </summary>
+        public uint wordPosition;
+        /// <summary>
+        /// Index of the sentence<br></br>
+        /// 문장 번호
+        /// </summary>
+        public uint sentPosition;
+        /// <summary>
+        /// Index of the line<br></br>
+        /// 줄 번호
+        /// </summary>
+        public uint lineNumber;
+
+        /// <summary>
+        /// Length(UTF16 characters)<br></br>
+        /// 길이(UTF16 문자 기준)
+        /// </summary>
+        public ushort length;
+        /// <summary>
+        /// Id of the sense of the word<br></br>
+        /// 의미 번호
+        /// </summary>
+        public byte senseId;
+        /// <summary>
+        /// Language model score of the target morpheme<br></br>
+        /// 해당 형태소의 언어모델 점수
+        /// </summary>
+        public float score;
+        /// <summary>
+        /// Typo fixing cost if the target morpheme's wrong typo has been fixed<br></br>
+        /// 오타가 교정된 경우 오타 비용. 그렇지 않은 경우 0
+        /// </summary>
+        public float typoCost;
+        /// <summary>
+        /// Wrong typo's information before typo is fixed. It loses its meaning if typoCost was 0.<br></br>
+        /// 교정 전 오타의 형태에 대한 정보 (typoCost가 0인 경우 의미 없음)
+        /// </summary>
+        public uint typoFormId;
+        /// <summary>
+        /// If the morpheme belongs to SSO, SSC tag, the position of the opposite morpheme. If it is -1, it means there is no corresponding morpheme.<br></br>
+        /// SSO, SSC 태그에 속하는 형태소의 경우 쌍을 이루는 반대쪽 형태소의 위치(-1인 경우 해당하는 형태소가 없는 것을 뜻함)
+        /// </summary>
+        public uint pairedToken;
+        /// <summary>
+        /// Index of the sub-sentence enclosed by quotation marks or parentheses. Starts from 1. if 0, it means that it was not a sub-sentence.<br></br>
+        /// 인용부호나 괄호로 둘러싸인 하위 문장의 번호. 1부터 시작. 0인 경우 하위 문장이 아님을 뜻함
+        /// </summary>
+        public uint subSentPosition; 
     }
 
     public enum Option

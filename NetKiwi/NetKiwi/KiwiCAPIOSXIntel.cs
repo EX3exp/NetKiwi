@@ -12,6 +12,9 @@ namespace NetKiwi.Backend
     using KiwiTypoHandle = IntPtr;
     using KiwiWsHandle = IntPtr;
 
+    /// <summary>
+    /// Kiwi Wrapper class for MacOSX Intel.
+    /// </summary>
     public class KiwiCAPIOSXIntel: KiwiCAPIBase
     {
 

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using NetKiwi.Backend;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using NetKiwi.Backend;
 namespace NetKiwi
 {
+    /// <summary>
+    /// Main Class for Kiwi C# wrapper. 
+    /// </summary>
     public class SharpKiwi
     {
         static string modelPath = "model/";
@@ -21,16 +19,20 @@ namespace NetKiwi
             }
         }
         private KiwiBuilder _kiwiBuilder;
-        public KiwiBuilder builder
+        private KiwiBuilder builder
         {
             get { return _kiwiBuilder; }
-            private set
+            set
             {
                 if (value == null) throw new ArgumentNullException("KiwiBuilder cannot be null");
                 _kiwiBuilder = value;
             }
         }
 
+        /// <summary>
+        /// Main Constructor for SharpKiwi. 
+        /// </summary>
+        /// <exception cref="KiwiException"></exception>
         public SharpKiwi()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -62,6 +64,12 @@ namespace NetKiwi
             builder = new KiwiBuilder(kiwiCAPI, modelPath);
             this.kiwi = builder.Build();
         }
+
+        /// <summary>
+        /// Analyzes given text.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
         public Result[] Analyze(string text)
         {
             return kiwi.Analyze(text);
@@ -90,6 +98,12 @@ namespace NetKiwi
             return results.ToArray();
         }
         */
+
+        /// <summary>
+        /// Extract words from given texts.
+        /// </summary>
+        /// <param name="texts"></param>
+        /// <returns></returns>
         public ExtractedWord[] ExtractWords(string[] texts)
         {
             var words = builder.ExtractWords((i) =>

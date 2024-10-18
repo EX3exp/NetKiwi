@@ -12,6 +12,9 @@ namespace NetKiwi.Backend
     using KiwiTypoHandle = IntPtr;
     using KiwiWsHandle = IntPtr;
 
+    /// <summary>
+    /// Kiwi Wrapper class for Windows x86/x64
+    /// </summary>
     public class KiwiCAPIWindows: KiwiCAPIBase
     {
 

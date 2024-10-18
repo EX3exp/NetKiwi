@@ -12,6 +12,9 @@ namespace NetKiwi.Backend
     using KiwiTypoHandle = IntPtr;
     using KiwiWsHandle = IntPtr;
 
+    /// <summary>
+    /// Kiwi Wrapper class for MacOS ARM64.
+    /// </summary>
     public class KiwiCAPIOSXArm: KiwiCAPIBase
     {
 

@@ -1,22 +1,16 @@
-﻿using NetKiwi.Backend;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
 
 namespace NetKiwi.Backend
 {
     using CString = IntPtr;
-    using KiwiHandle = IntPtr;
     using KiwiBuilderHandle = IntPtr;
-    using KiwiResHandle = IntPtr;
-    using KiwiWsHandle = IntPtr;
-    using KiwiTypoHandle = IntPtr;
+    using KiwiHandle = IntPtr;
     using KiwiJoinerHandle = IntPtr;
     using KiwiMorphsetHandle = IntPtr;
     using KiwiPretokenizedHandle = IntPtr;
+    using KiwiResHandle = IntPtr;
+    using KiwiTypoHandle = IntPtr;
+    using KiwiWsHandle = IntPtr;
 
     public class KiwiCAPIOSXIntel: KiwiCAPIBase
     {

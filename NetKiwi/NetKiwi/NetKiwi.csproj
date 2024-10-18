@@ -13,14 +13,16 @@
     <Description>C# Wrapper for Kiwi(지능형 한국어 형태소 분석기), supports Windows, Linux, MacOS.</Description>
     <PackageIcon>kiwi_icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/EX3exp/NetKiwi</RepositoryUrl>
-    <PackageTags>1.0.1</PackageTags>
+    <PackageTags>1.0.2</PackageTags>
+    <VersionPrefix>1.0.2</VersionPrefix>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReleaseNotes>beta</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/EX3exp/NetKiwi</PackageProjectUrl>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
-    <FileVersion>1.0.1.0</FileVersion>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
+    <Version>$(VersionPrefix)</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
@@ -45,13 +47,16 @@
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
+
   <ItemGroup>
-    <None Update="runtimes\**">
+    <None Update="model\**">
+        <Pack>True</Pack>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Update="model\**">
+    <None Include="runtimes\**">
+        <Pack>True</Pack>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

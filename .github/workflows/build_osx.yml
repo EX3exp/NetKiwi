@@ -25,8 +25,8 @@ jobs:
 
     - name: Build - macOS
       run: |
-        dotnet restore NetKiwi/NetKiwi/NetKiwi.csproj -r osx-x64
-        dotnet build NetKiwi/NetKiwi/NetKiwi.csproj -r osx-x64
+        dotnet restore NetKiwi/NetKiwi/NetKiwi.csproj -r osx-arm64
+        dotnet build NetKiwi/NetKiwi/NetKiwi.csproj -r osx-arm64
     
     - name: Test - macOS
       run: dotnet test NetKiwi/NetKiwi.Test/NetKiwi.Test.csproj

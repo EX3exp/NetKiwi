@@ -300,7 +300,7 @@ namespace NetKiwi.Backend
                 Directory.CreateDirectory(RootPath);
             }
 
-            return RootPath;
+            return Path.Combine(RootPath, "netkiwi");
         }
         public static bool LoadDll(string path = null)
         {

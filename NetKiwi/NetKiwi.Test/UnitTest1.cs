@@ -10,7 +10,7 @@ namespace test
     [TestClass]
     public class UnitTest
     {
-        static string modelPath = "model/";
+        static string modelPath = "netkiwi/model/";
 
         public SharpKiwi InitModel()
         {

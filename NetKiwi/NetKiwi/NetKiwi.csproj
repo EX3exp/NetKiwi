@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <PackageCopyToOutput>true</PackageCopyToOutput>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <Title>NetKiwi</Title>
@@ -13,15 +14,15 @@
     <Description>C# Wrapper for Kiwi(지능형 한국어 형태소 분석기), supports Windows, Linux, MacOS.</Description>
     <PackageIcon>kiwi_icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/EX3exp/NetKiwi</RepositoryUrl>
-    <PackageTags>1.0.2</PackageTags>
-    <VersionPrefix>1.0.2</VersionPrefix>
+    <PackageTags>1.0.3</PackageTags>
+    <VersionPrefix>1.0.3</VersionPrefix>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReleaseNotes>beta</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/EX3exp/NetKiwi</PackageProjectUrl>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <FileVersion>1.2.0.0</FileVersion>
     <Version>$(VersionPrefix)</Version>
   </PropertyGroup>
 
@@ -47,19 +48,39 @@
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
-
   <ItemGroup>
-    <None Update="model\**">
-        <Pack>True</Pack>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Content Include="netkiwi\model\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <pack>true</pack>
+    </Content>
+    <Content Include="netkiwi\runtimes\win-x86\lib\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <pack>true</pack>
+    </Content>
+    <Content Include="netkiwi\runtimes\win-x64\lib\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <pack>true</pack>
+    </Content>
+    <Content Include="netkiwi\runtimes\macos-x86-x64\lib\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <pack>true</pack>
+    </Content>
+    <Content Include="netkiwi\runtimes\macos-arm64\lib\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <pack>true</pack>
+    </Content>
+    <Content Include="netkiwi\runtimes\linux-x86-x64\lib\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <pack>true</pack>
+    </Content>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="runtimes\**">
-        <Pack>True</Pack>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+  
   <ItemGroup>
     <None Update="Assets\kiwi_icon.png">
       <Pack>True</Pack>

@@ -18,7 +18,7 @@ namespace NetKiwi.Backend
     public class KiwiCAPILinux: KiwiCAPIBase
     {
 
-        private const string dll_name = "runtimes/linux-x86-x64/lib/libkiwi.so";
+        private const string dll_name = "netkiwi/runtimes/linux-x86-x64/lib/libkiwi.so";
 
 
        

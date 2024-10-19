@@ -48,40 +48,20 @@
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
+  
   <ItemGroup>
-    <Content Include="netkiwi\model\**">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="netkiwi\**">
+      <Pack>true</Pack>
+      <PackagePath>contentFiles\any\any;content</PackagePath>
       <PackageCopyToOutput>true</PackageCopyToOutput>
-      <pack>true</pack>
-    </Content>
-    <Content Include="netkiwi\runtimes\win-x86\lib\**">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <PackageCopyToOutput>true</PackageCopyToOutput>
-      <pack>true</pack>
-    </Content>
-    <Content Include="netkiwi\runtimes\win-x64\lib\**">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <PackageCopyToOutput>true</PackageCopyToOutput>
-      <pack>true</pack>
-    </Content>
-    <Content Include="netkiwi\runtimes\macos-x86-x64\lib\**">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <PackageCopyToOutput>true</PackageCopyToOutput>
-      <pack>true</pack>
-    </Content>
-    <Content Include="netkiwi\runtimes\macos-arm64\lib\**">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <PackageCopyToOutput>true</PackageCopyToOutput>
-      <pack>true</pack>
-    </Content>
-    <Content Include="netkiwi\runtimes\linux-x86-x64\lib\**">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <PackageCopyToOutput>true</PackageCopyToOutput>
-      <pack>true</pack>
+      <CopyToOutput>true</CopyToOutput>
+      <BuildAction>Content</BuildAction>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   
-  <ItemGroup>
+  
+  <ItemGroup> 
     <None Update="Assets\kiwi_icon.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>

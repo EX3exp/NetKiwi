@@ -7,7 +7,7 @@ namespace NetKiwi
     /// </summary>
     public class SharpKiwi: IDisposable
     {
-        static string modelPath = "netkiwi/model/";
+        static string modelPath = "netkiwi/model";
         private Kiwi _kiwi;
         readonly KiwiCAPIBase kiwiCAPI;
         public Kiwi kiwi

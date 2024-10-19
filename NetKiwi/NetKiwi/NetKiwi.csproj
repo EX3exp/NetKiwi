@@ -14,15 +14,15 @@
     <Description>C# Wrapper for Kiwi(지능형 한국어 형태소 분석기), supports Windows, Linux, MacOS.</Description>
     <PackageIcon>kiwi_icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/EX3exp/NetKiwi</RepositoryUrl>
-    <PackageTags>1.0.3</PackageTags>
-    <VersionPrefix>1.0.3</VersionPrefix>
+    <PackageTags>1.1.0</PackageTags>
+    <VersionPrefix>1.1.0</VersionPrefix>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReleaseNotes>beta</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/EX3exp/NetKiwi</PackageProjectUrl>
-    <AssemblyVersion>1.2.0.0</AssemblyVersion>
-    <FileVersion>1.2.0.0</FileVersion>
+    <AssemblyVersion>1.3.0.0</AssemblyVersion>
+    <FileVersion>1.3.0.0</FileVersion>
     <Version>$(VersionPrefix)</Version>
   </PropertyGroup>
 
@@ -49,14 +49,12 @@
     </None>
   </ItemGroup>
   
-  <ItemGroup>
-    <Content Include="netkiwi\**">
-      <Pack>true</Pack>
-      <PackagePath>contentFiles\any\any;content</PackagePath>
-      <PackageCopyToOutput>true</PackageCopyToOutput>
-      <CopyToOutput>true</CopyToOutput>
-      <BuildAction>Content</BuildAction>
+  <ItemGroup Label="Packaging">
+    <Content Include="build\NetKiwi.targets" PackagePath="build\NetKiwi.targets" />
+
+    <Content Include="netkiwi\**" buildAction="Content">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Pack>true</Pack>
     </Content>
   </ItemGroup>
   

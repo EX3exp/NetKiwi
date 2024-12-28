@@ -1,6 +1,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <ItemGroup>
-        <Models Include="$(MSBuildThisFileDirectory)..\content\netkiwi\model\**" buildAction="Content"/>
+        <Models Include="$(MSBuildThisFileDirectory)..\content\netkiwi\models\**" buildAction="Content"/>
         <RuntimesWin86 Include="$(MSBuildThisFileDirectory)..\content\netkiwi\runtimes\win-x86\lib\**" buildAction="Content" />
         <RuntimesWin64 Include="$(MSBuildThisFileDirectory)..\content\netkiwi\runtimes\win-x64\lib\**" buildAction="Content" />
         <RuntimesMacIntel Include="$(MSBuildThisFileDirectory)..\content\netkiwi\runtimes\macos-x86-x64\lib\**" buildAction="Content" />

@@ -7,7 +7,7 @@ namespace NetKiwi
     /// </summary>
     public class SharpKiwi: IDisposable
     {
-        static string modelPath = "netkiwi/model";
+        //static string modelPath = "netkiwi/model";
         private Kiwi _kiwi;
         readonly KiwiCAPIBase kiwiCAPI;
         public Kiwi kiwi
@@ -33,8 +33,9 @@ namespace NetKiwi
         /// Main Constructor for SharpKiwi. 
         /// </summary>
         /// <exception cref="KiwiException"></exception>
-        public SharpKiwi()
+        public SharpKiwi(string? modelpath = null)
         {
+            string modelPath;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 kiwiCAPI = new KiwiCAPIWindows();
@@ -61,6 +62,14 @@ namespace NetKiwi
             }
 
             KiwiLoader.LoadDll(null);
+            if (modelpath != null)
+            {
+                modelPath = modelpath;
+            }
+            else
+            {
+                modelPath = Path.Combine("netkiwi", "model");
+            }
             builder = new KiwiBuilder(kiwiCAPI, modelPath);
             this.kiwi = builder.Build();
         }

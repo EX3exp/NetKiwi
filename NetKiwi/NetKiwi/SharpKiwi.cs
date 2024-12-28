@@ -68,7 +68,7 @@ namespace NetKiwi
             }
             else
             {
-                modelPath = Path.Combine("netkiwi", "model");
+                modelPath = Path.Combine("netkiwi", "models");
             }
             builder = new KiwiBuilder(kiwiCAPI, modelPath);
             this.kiwi = builder.Build();

@@ -4,6 +4,7 @@ using System.Text;
 using NetKiwi;
 using NetKiwi.Backend;
 using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
+using System.Diagnostics;
 
 namespace test
 {
@@ -61,22 +62,29 @@ namespace test
             }
 
             var words = sharpKiwi.ExtractWords(arr);
+            
         }
 
         [TestMethod]
         public void TestExtractAddWords()
         {
-            SharpKiwi sharpKiwi = new SharpKiwi();
+            SharpKiwi sharpKiwi = new SharpKiwi("C:\\Users\\inthe\\Downloads\\NetKiwi\\NetKiwi\\NetKiwi\\netkiwi");
             string[] arr = new string[100];
             for (int i = 0; i < 100; ++i)
             {
                 arr[i] = String.Format("이것은 {0}번째 킼윜입니다.", i);
             }
 
-            var words = sharpKiwi.ExtractWords(arr);
-            Console.WriteLine(words);
             var res = sharpKiwi.Analyze("이것은 킼윜입니다.");
-            Console.WriteLine(res);
+            Console.WriteLine($"result length: {res.LongLength}");
+            foreach (var r in res)
+            {
+                Console.WriteLine($"morphs length: {r.morphs.Length}");
+                foreach (var m in r.morphs)
+                {
+                    Console.WriteLine($"form: {m.form}, tag: {m.tag}");
+                }
+            }
             Assert.IsTrue(res[0].morphs.Length > 0);
             Assert.IsTrue(res[0].morphs[0].form == "이것");
         }

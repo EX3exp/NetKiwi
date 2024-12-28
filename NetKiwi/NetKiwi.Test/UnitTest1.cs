@@ -68,7 +68,7 @@ namespace test
         [TestMethod]
         public void TestExtractAddWords()
         {
-            SharpKiwi sharpKiwi = new SharpKiwi("C:/Users/inthe/Downloads/NetKiwi/NetKiwi/NetKiwi/netkiwi/model");
+            SharpKiwi sharpKiwi = new SharpKiwi("C:/Users/inthe/Downloads/NetKiwi/NetKiwi/NetKiwi/netkiwi/models");
             string[] arr = new string[100];
             for (int i = 0; i < 100; ++i)
             {

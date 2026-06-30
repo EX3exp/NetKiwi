@@ -1,29 +1,25 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NetKiwi.Backend;
 using System;
 using System.Text;
-using NetKiwi;
-using NetKiwi.Backend;
-using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
-using System.Diagnostics;
 
-namespace test
+namespace NetKiwi.Test
 {
     [TestClass]
     public class UnitTest
     {
-        //static string modelPath = "netkiwi/model";
+        //static string modelPath = "";
 
-        public SharpKiwi InitModel()
+        public Kiwi InitModel()
         {
-            SharpKiwi sharpKiwi = new SharpKiwi();
-            return sharpKiwi;
+            var builder = new KiwiBuilder();
+            return builder.Build();
         }
 
         [TestMethod]
         public void TestInitialize()
         {
-            SharpKiwi sharpKiwi = new();
-            Assert.IsTrue(sharpKiwi.kiwi != null);
+            var kiwi = InitModel();
         }
 
         [TestMethod]
@@ -36,57 +32,63 @@ namespace test
             Assert.IsTrue(res[0].morphs[0].tag == "NNG");
         }
 
-        /*
         [TestMethod]
         public void TestAnalyzeMulti()
         {
-            SharpKiwi sharpKiwi = new SharpKiwi();
+            var kiwi = InitModel();
             string[] arr = new string[100];
             for (int i = 0; i < 100; ++i)
             {
                 arr[i] = String.Format("테스트 {0}입니다.", i);
             }
 
-            var res = sharpKiwi.AnalyzeMulti(arr);
+            kiwi.AnalyzeMulti((i) =>
+            {
+                if (i >= arr.Length) return null;
+                return arr[i];
+            }, (i, res) =>
+            {
+                Assert.IsTrue(res[0].morphs[0].form == "테스트");
+                Assert.IsTrue(res[0].morphs[1].form == String.Format("{0}", i));
+                return 0;
+            });
         }
-        */
 
         [TestMethod]
         public void TestExtractWords()
         {
-            SharpKiwi sharpKiwi = new SharpKiwi();
+            var builder = new KiwiBuilder();
             string[] arr = new string[100];
             for (int i = 0; i < 100; ++i)
             {
                 arr[i] = String.Format("이것은 {0}번째 킼윜입니다.", i);
             }
 
-            var words = sharpKiwi.ExtractWords(arr);
-            
+            var words = builder.ExtractWords((i) =>
+            {
+                if (i >= arr.Length) return string.Empty;
+                return arr[i];
+            });
         }
 
         [TestMethod]
         public void TestExtractAddWords()
         {
-            SharpKiwi sharpKiwi = new SharpKiwi();
+            var builder = new KiwiBuilder();
             string[] arr = new string[100];
             for (int i = 0; i < 100; ++i)
             {
                 arr[i] = String.Format("이것은 {0}번째 킼윜입니다.", i);
             }
 
-            var res = sharpKiwi.Analyze("이것은 킼윜입니다.");
-            Console.WriteLine($"result length: {res.LongLength}");
-            foreach (var r in res)
+            var words = builder.ExtractAddWords((i) =>
             {
-                Console.WriteLine($"morphs length: {r.morphs.Length}");
-                foreach (var m in r.morphs)
-                {
-                    Console.WriteLine($"form: {m.form}, tag: {m.tag}");
-                }
-            }
-            Assert.IsTrue(res[0].morphs.Length > 0);
-            Assert.IsTrue(res[0].morphs[0].form == "이것");
+                if (i >= arr.Length) return string.Empty;
+                return arr[i];
+            });
+
+            var kiwi = builder.Build();
+            var res = kiwi.Analyze("이것은 킼윜입니다.");
         }
     }
 }

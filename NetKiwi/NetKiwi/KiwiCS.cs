@@ -35,78 +35,95 @@ namespace NetKiwi.Backend
 
     internal class Utf8String : IDisposable
     {
-        IntPtr iPtr;
-        public IntPtr IntPtr { get { return iPtr; } }
+        private IntPtr _ptr;
+        private bool _disposed = false;
+
+        public IntPtr IntPtr => _ptr;
         public int BufferLength { get { return iBufferSize; } }
         int iBufferSize;
         public Utf8String(string aValue)
         {
             if (aValue == null)
             {
-                iPtr = IntPtr.Zero;
+                _ptr = IntPtr.Zero;
             }
             else
             {
                 byte[] bytes = Encoding.UTF8.GetBytes(aValue);
-                iPtr = Marshal.AllocHGlobal(bytes.Length + 1);
-                Marshal.Copy(bytes, 0, iPtr, bytes.Length);
-                Marshal.WriteByte(iPtr, bytes.Length, 0);
+                _ptr = Marshal.AllocHGlobal(bytes.Length + 1);
+                Marshal.Copy(bytes, 0, _ptr, bytes.Length);
+                Marshal.WriteByte(_ptr, bytes.Length, 0);
                 iBufferSize = bytes.Length + 1;
             }
         }
         public void Dispose()
         {
-            if (iPtr != IntPtr.Zero)
+            if (!_disposed && _ptr != IntPtr.Zero)
             {
-                Marshal.FreeHGlobal(iPtr);
-                iPtr = IntPtr.Zero;
+                Marshal.FreeHGlobal(_ptr);
+                _ptr = IntPtr.Zero;
+                _disposed = true;
             }
+        }
+
+        ~Utf8String()
+        {
+            Dispose();
         }
     }
 
     internal class Utf16String : IDisposable
     {
-        IntPtr iPtr;
-        public IntPtr IntPtr { get { return iPtr; } }
+        private bool _disposed = false;
+
+        IntPtr _ptr;
+        public IntPtr IntPtr => _ptr;
         public int BufferLength { get { return iBufferSize; } }
         int iBufferSize;
         public Utf16String(string aValue)
         {
             if (aValue == null)
             {
-                iPtr = IntPtr.Zero;
+                _ptr = IntPtr.Zero;
             }
             else
             {
                 byte[] bytes = new UnicodeEncoding().GetBytes(aValue);
-                iPtr = Marshal.AllocHGlobal(bytes.Length + 2);
-                Marshal.Copy(bytes, 0, iPtr, bytes.Length);
-                Marshal.WriteByte(iPtr, bytes.Length, 0);
-                Marshal.WriteByte(iPtr, bytes.Length + 1, 0);
+                _ptr = Marshal.AllocHGlobal(bytes.Length + 2);
+                Marshal.Copy(bytes, 0, _ptr, bytes.Length);
+                Marshal.WriteByte(_ptr, bytes.Length, 0);
+                Marshal.WriteByte(_ptr, bytes.Length + 1, 0);
                 iBufferSize = bytes.Length + 2;
             }
         }
         public void Dispose()
         {
-            if (iPtr != IntPtr.Zero)
+            if (!_disposed &&  _ptr != IntPtr.Zero)
             {
-                Marshal.FreeHGlobal(iPtr);
-                iPtr = IntPtr.Zero;
+                Marshal.FreeHGlobal(_ptr);
+                _ptr = IntPtr.Zero;
+                _disposed = true;
             }
+
+        }
+
+        ~Utf16String()
+        {
+            Dispose();
         }
     }
 
     internal class Utf8StringArray : IDisposable
     {
-
-        IntPtr iPtr, bPtr;
-        public IntPtr IntPtr { get { return bPtr; } }
+        private bool _disposed = false;
+        private IntPtr _iPtr, _bPtr;
+        public IntPtr IntPtr => _bPtr;
 
         public Utf8StringArray(string[] aValue)
         {
             if (aValue == null)
             {
-                iPtr = IntPtr.Zero;
+                _iPtr = IntPtr.Zero;
             }
             else
             {
@@ -117,28 +134,34 @@ namespace NetKiwi.Backend
                     pool[i] = Encoding.UTF8.GetBytes(aValue[i]);
                     totalLength += pool[i].Length + 1;
                 }
-                iPtr = Marshal.AllocHGlobal(totalLength);
-                bPtr = Marshal.AllocHGlobal(IntPtr.Size * pool.Length);
+                _iPtr = Marshal.AllocHGlobal(totalLength);
+                _bPtr = Marshal.AllocHGlobal(IntPtr.Size * pool.Length);
 
                 int offset = 0;
                 for (int i = 0; i < aValue.Length; i++)
                 {
-                    Marshal.Copy(pool[i], 0, iPtr + offset, pool[i].Length);
-                    Marshal.WriteByte(iPtr, pool[i].Length, 0);
-                    Marshal.WriteIntPtr(bPtr, IntPtr.Size * i, iPtr + offset);
+                    Marshal.Copy(pool[i], 0, _iPtr + offset, pool[i].Length);
+                    Marshal.WriteByte(_iPtr, pool[i].Length, 0);
+                    Marshal.WriteIntPtr(_bPtr, IntPtr.Size * i, _iPtr + offset);
                     offset += pool[i].Length + 1;
                 }
             }
         }
         public void Dispose()
         {
-            if (iPtr != IntPtr.Zero)
+            if (!_disposed && _iPtr != IntPtr.Zero)
             {
-                Marshal.FreeHGlobal(iPtr);
-                Marshal.FreeHGlobal(bPtr);
-                iPtr = IntPtr.Zero;
-                bPtr = IntPtr.Zero;
+                Marshal.FreeHGlobal(_iPtr);
+                Marshal.FreeHGlobal(_bPtr);
+                _iPtr = IntPtr.Zero;
+                _bPtr = IntPtr.Zero;
+                _disposed = true;
             }
+        }
+
+        ~Utf8StringArray()
+        {
+            Dispose();
         }
     }
     public class KiwiException : Exception
@@ -391,8 +414,10 @@ namespace NetKiwi.Backend
         }
     }
 
-    public class KiwiBuilder
+    public class KiwiBuilder : IDisposable
     {
+        private bool _disposed = false;
+
         public delegate string Reader(int id);
 
         private KiwiBuilderHandle inst;
@@ -400,7 +425,25 @@ namespace NetKiwi.Backend
         private Tuple<int, string> readItem;
         readonly KiwiCAPIBase KiwiCAPI;
 
+        ~KiwiBuilder()
+        {
+            Dispose(false);
+        }
         
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (inst != IntPtr.Zero)
+                {
+                    if (KiwiCAPI.Builder_close(inst) < 0) throw new KiwiException(Marshal.PtrToStringAnsi(KiwiCAPI.Error()));
+                    inst = IntPtr.Zero;
+                }
+                _disposed = true;
+            }
+        }
+
         private static KiwiCAPIBase.CReader readerInst = (int id, IntPtr buf, IntPtr userData) =>
         {
             GCHandle handle = (GCHandle)userData;
@@ -486,25 +529,24 @@ namespace NetKiwi.Backend
             return new Kiwi(KiwiCAPI, ret);
         }
 
-        ~KiwiBuilder()
-        {
-            if (inst != IntPtr.Zero)
-            {
-                if (KiwiCAPI.Builder_close(inst) < 0) throw new KiwiException(Marshal.PtrToStringAnsi(KiwiCAPI.Error()));
-            }
-        }
 
         public void Dispose()
         {
-            if (inst != IntPtr.Zero)
+            try
             {
-                if (KiwiCAPI.Builder_close(inst) < 0) throw new KiwiException(Marshal.PtrToStringAnsi(KiwiCAPI.Error()));
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception during Disposing KiwiBuilder: {ex.Message}");
             }
         }
     }
 
     public class KiwiJoiner
     {
+        private bool _disposed = false;
         private KiwiJoinerHandle inst;
         readonly KiwiCAPIBase KiwiCAPI;
         public KiwiJoiner(KiwiCAPIBase kiwiCAPI, KiwiJoinerHandle _inst)
@@ -523,24 +565,40 @@ namespace NetKiwi.Backend
             if (KiwiCAPI.Joiner_add(inst, new Utf8String(form).IntPtr, new Utf8String(tag).IntPtr, option) < 0) throw new KiwiException(Marshal.PtrToStringAnsi(KiwiCAPI.Error()));
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (inst != IntPtr.Zero)
+                {
+                    if (KiwiCAPI.Joiner_close(inst) < 0) throw new KiwiException(Marshal.PtrToStringAnsi(KiwiCAPI.Error()));
+                    inst = IntPtr.Zero;
+                }
+                _disposed = true;
+            }
+        }
+
         ~KiwiJoiner()
         {
-            if (inst != IntPtr.Zero)
-            {
-                if (KiwiCAPI.Joiner_close(inst) < 0) throw new KiwiException(Marshal.PtrToStringAnsi(KiwiCAPI.Error()));
-            }
+            Dispose(false);
         }
 
         public void Dispose()
         {
-            if (inst != IntPtr.Zero)
+            try
             {
-                if (KiwiCAPI.Joiner_close(inst) < 0) throw new KiwiException(Marshal.PtrToStringAnsi(KiwiCAPI.Error()));
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception during Disposing KiwiJoiner: {ex.Message}");
             }
         }
     }
-    public class Kiwi
+    public class Kiwi : IDisposable
     {
+        private bool _disposed = false;
         public delegate string Reader(int id);
         public delegate int Receiver(int id, Result[] res);
 
@@ -702,19 +760,33 @@ namespace NetKiwi.Backend
             set { KiwiCAPI.Set_option_f(inst, (int)Option.TypoCostWeight, value); }
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (inst != IntPtr.Zero)
+                {
+                    if (KiwiCAPI.Close(inst) < 0) throw new KiwiException(Marshal.PtrToStringAnsi(KiwiCAPI.Error()));
+                    inst = IntPtr.Zero;
+                }
+                _disposed = true;
+            }
+        }
         ~Kiwi()
         {
-            if (inst != IntPtr.Zero)
-            {
-                if (KiwiCAPI.Close(inst) < 0) throw new KiwiException(Marshal.PtrToStringAnsi(KiwiCAPI.Error()));
-            }
+            Dispose(false);
         }
 
         public void Dispose()
         {
-            if (inst != IntPtr.Zero)
+            try
             {
-                if (KiwiCAPI.Close(inst) < 0) throw new KiwiException(Marshal.PtrToStringAnsi(KiwiCAPI.Error()));
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception during Disposing Kiwi: {ex.Message}");
             }
         }
     }

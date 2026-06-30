@@ -8,6 +8,7 @@ namespace NetKiwi
     public class SharpKiwi: IDisposable
     {
         //static string modelPath = "netkiwi/model";
+        private bool _disposed = false;
         private Kiwi _kiwi;
         readonly KiwiCAPIBase kiwiCAPI;
         public Kiwi kiwi
@@ -126,15 +127,29 @@ namespace NetKiwi
 
         ~SharpKiwi()
         {
-            _kiwi.Dispose();
-            _kiwiBuilder.Dispose();
+            Dispose(false);
         }
 
-        void IDisposable.Dispose()
+        public void Dispose()
         {
-            _kiwi.Dispose();
-            _kiwiBuilder.Dispose();
-            
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+
+            if (_kiwi != null)
+            {
+                _kiwi.Dispose();
+            }
+            if (_kiwiBuilder != null)
+            {
+                _kiwiBuilder.Dispose();
+            }
+
+            _disposed = true;
         }
     }
 }

@@ -369,12 +369,13 @@ namespace NetKiwi.Backend
     }
 
     
-    public class TypoTransformer
+    public class TypoTransformer: IDisposable
     {
+        private bool _disposed = false; 
         private bool readOnly = false;
         public KiwiTypoHandle inst;
         readonly KiwiCAPIBase KiwiCAPI;
-        
+
         public TypoTransformer(KiwiCAPIBase kiwiCAPI)
         {
             KiwiCAPI = kiwiCAPI;
@@ -397,20 +398,35 @@ namespace NetKiwi.Backend
             return KiwiCAPI.Typo_add(inst, new Utf8StringArray(orig).IntPtr, orig.Length, new Utf8StringArray(error).IntPtr, error.Length, cost, condition);
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                try
+                {
+                    if (inst != IntPtr.Zero && !readOnly)
+                    {
+                        KiwiCAPI.Typo_close(inst);
+                        inst = IntPtr.Zero;
+                    }
+                }
+                catch
+                {
+                    // Prevent exceptions from being thrown in the finalizer
+                }
+                _disposed = true;
+            }
+        }
+
         ~TypoTransformer()
         {
-            if (inst != null && !readOnly)
-            {
-                KiwiCAPI.Typo_close(inst);
-            }
+            Dispose(false);
         }
 
         public void Dispose()
         {
-            if (inst != null && !readOnly)
-            {
-                KiwiCAPI.Typo_close(inst);
-            }
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 
@@ -435,10 +451,17 @@ namespace NetKiwi.Backend
         {
             if (!_disposed)
             {
-                if (inst != IntPtr.Zero)
+                try
                 {
-                    if (KiwiCAPI.Builder_close(inst) < 0) throw new KiwiException(Marshal.PtrToStringAnsi(KiwiCAPI.Error()));
-                    inst = IntPtr.Zero;
+                    if (inst != IntPtr.Zero)
+                    {
+                        KiwiCAPI.Builder_close(inst);
+                        inst = IntPtr.Zero;
+                    }
+                }
+                catch
+                {
+                    // Prevent exceptions from being thrown in the finalizer
                 }
                 _disposed = true;
             }
@@ -532,15 +555,8 @@ namespace NetKiwi.Backend
 
         public void Dispose()
         {
-            try
-            {
-                Dispose(true);
-                GC.SuppressFinalize(this);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception during Disposing KiwiBuilder: {ex.Message}");
-            }
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 
@@ -569,10 +585,17 @@ namespace NetKiwi.Backend
         {
             if (!_disposed)
             {
-                if (inst != IntPtr.Zero)
+                try
                 {
-                    if (KiwiCAPI.Joiner_close(inst) < 0) throw new KiwiException(Marshal.PtrToStringAnsi(KiwiCAPI.Error()));
-                    inst = IntPtr.Zero;
+                    if (inst != IntPtr.Zero)
+                    {
+                        KiwiCAPI.Joiner_close(inst);
+                        inst = IntPtr.Zero;
+                    }
+                }
+                catch
+                {
+                    // Prevent exceptions from being thrown in the finalizer
                 }
                 _disposed = true;
             }
@@ -585,15 +608,8 @@ namespace NetKiwi.Backend
 
         public void Dispose()
         {
-            try
-            {
-                Dispose(true);
-                GC.SuppressFinalize(this);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception during Disposing KiwiJoiner: {ex.Message}");
-            }
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
     public class Kiwi : IDisposable
@@ -764,10 +780,17 @@ namespace NetKiwi.Backend
         {
             if (!_disposed)
             {
-                if (inst != IntPtr.Zero)
+                try
                 {
-                    if (KiwiCAPI.Close(inst) < 0) throw new KiwiException(Marshal.PtrToStringAnsi(KiwiCAPI.Error()));
-                    inst = IntPtr.Zero;
+                    if (inst != IntPtr.Zero)
+                    {
+                        KiwiCAPI.Close(inst);
+                        inst = IntPtr.Zero;
+                    }
+                }
+                catch
+                {
+                    // Prevent exceptions from being thrown in the finalizer
                 }
                 _disposed = true;
             }
@@ -779,15 +802,8 @@ namespace NetKiwi.Backend
 
         public void Dispose()
         {
-            try
-            {
-                Dispose(true);
-                GC.SuppressFinalize(this);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception during Disposing Kiwi: {ex.Message}");
-            }
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -471,7 +471,7 @@ namespace NetKiwi.Backend
                  KiwiCAPI.CopyMemory(buf, textStr.IntPtr, (uint)kb.readItem.Item2.Length * 2);
              }
 
-             return kb.readItem.Item2.Length;
+             return 0;
          };
         public KiwiBuilder()
         {

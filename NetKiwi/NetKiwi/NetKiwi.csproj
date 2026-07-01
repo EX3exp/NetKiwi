@@ -14,16 +14,16 @@
     <Description>C# Wrapper for Kiwi(지능형 한국어 형태소 분석기), supports Windows, Linux, MacOS.</Description>
     <PackageIcon>kiwi_icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/EX3exp/NetKiwi</RepositoryUrl>
-    <PackageTags>1.6.0</PackageTags>
-    <VersionPrefix>1.6.0</VersionPrefix>
+    <PackageTags>1.6.1</PackageTags>
+    <VersionPrefix>1.6.1</VersionPrefix>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReleaseNotes></PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/EX3exp/NetKiwi</PackageProjectUrl>
-    <AssemblyVersion>1.6.0.0</AssemblyVersion>
-    <FileVersion>1.6.0.0</FileVersion>
-    <Version>1.6.0</Version>
+    <AssemblyVersion>1.6.1.0</AssemblyVersion>
+    <FileVersion>1.6.1.0</FileVersion>
+    <Version>1.6.1</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>

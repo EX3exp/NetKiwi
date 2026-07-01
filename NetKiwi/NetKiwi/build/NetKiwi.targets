@@ -1,34 +1,33 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <ItemGroup>
         <Models Include="$(MSBuildThisFileDirectory)..\content\netkiwi\models\**" buildAction="Content"/>
-        <RuntimesWin86 Include="$(MSBuildThisFileDirectory)..\content\netkiwi\runtimes\win-x86\lib\**" buildAction="Content" />
-        <RuntimesWin64 Include="$(MSBuildThisFileDirectory)..\content\netkiwi\runtimes\win-x64\lib\**" buildAction="Content" />
-        <RuntimesMacIntel Include="$(MSBuildThisFileDirectory)..\content\netkiwi\runtimes\macos-x86-x64\lib\**" buildAction="Content" />
-        <RuntimesMacArm Include="$(MSBuildThisFileDirectory)..\content\netkiwi\runtimes\macos-arm64\lib\**" buildAction="Content" />
-        <RuntimesLinux Include="$(MSBuildThisFileDirectory)..\content\netkiwi\runtimes\linux-x86-x64\lib\**" buildAction="Content" />
+        <RuntimesWin86 Include="$(MSBuildThisFileDirectory)..\content\netkiwi\runtimes\win-x86\native\**" buildAction="Content" />
+        <RuntimesWin64 Include="$(MSBuildThisFileDirectory)..\content\netkiwi\runtimes\win-x64\native\**" buildAction="Content" />
+        <RuntimesMacIntel Include="$(MSBuildThisFileDirectory)..\content\netkiwi\runtimes\osx-x64\native\**" buildAction="Content" />
+        <RuntimesLinux Include="$(MSBuildThisFileDirectory)..\content\netkiwi\runtimes\linux-x64\native\**" buildAction="Content" />
     </ItemGroup>
     <Target Name="CopyModelsToProject" BeforeTargets="Build" >
         <Copy SourceFiles="@(Models)" DestinationFolder="$(OutDir)\netkiwi\models"
         />
     </Target>
     <Target Name="CopyRuntimesToProjectWin86" BeforeTargets="Build" Condition="'$(RuntimeIdentifier)' == 'win-x86' Or '$(Configuration)'=='DEBUG'">
-        <Copy SourceFiles="@(RuntimesWin86)" DestinationFolder="$(OutDir)\netkiwi\runtimes\win-x86\lib"
+        <Copy SourceFiles="@(RuntimesWin86)" DestinationFolder="$(OutDir)\netkiwi\runtimes\win-x86\native"
         />
     </Target>
     <Target Name="CopyRuntimesToProjectWin64" BeforeTargets="Build" Condition="'$(RuntimeIdentifier)' == 'win-x64' Or '$(RuntimeIdentifier)' == 'win-arm64' Or '$(Configuration)'=='DEBUG'">
-        <Copy SourceFiles="@(RuntimesWin64)" DestinationFolder="$(OutDir)\netkiwi\runtimes\win-x64\lib"
+        <Copy SourceFiles="@(RuntimesWin64)" DestinationFolder="$(OutDir)\netkiwi\runtimes\win-x64\native"
         />
     </Target>
     <Target Name="CopyRuntimesToProjectMacIntel" BeforeTargets="Build" Condition="'$(RuntimeIdentifier)' == 'osx-x64' Or '$(Configuration)'=='DEBUG'">
-        <Copy SourceFiles="@(RuntimesMacIntel)" DestinationFolder="$(OutDir)\netkiwi\runtimes\macos-x86-x64\lib"
+        <Copy SourceFiles="@(RuntimesMacIntel)" DestinationFolder="$(OutDir)\netkiwi\runtimes\osx-x64\native"
         />
     </Target>
     <Target Name="CopyRuntimesToProjectMacArm" BeforeTargets="Build" Condition="'$(RuntimeIdentifier)' == 'osx-arm64' Or '$(Configuration)'=='DEBUG'">
-        <Copy SourceFiles="@(RuntimesMacArm)" DestinationFolder="$(OutDir)\netkiwi\runtimes\macos-arm64\lib"
+        <Copy SourceFiles="@(RuntimesMacArm)" DestinationFolder="$(OutDir)\netkiwi\runtimes\osx-x64\native"
         />
     </Target>
     <Target Name="CopyRuntimesToProjectLinux" BeforeTargets="Build" Condition="'$(RuntimeIdentifier)' == 'linux-x64' Or '$(Configuration)'=='DEBUG'">
-        <Copy SourceFiles="@(RuntimesLinux)" DestinationFolder="$(OutDir)\netkiwi\runtimes\linux-x86-x64\lib"
+        <Copy SourceFiles="@(RuntimesLinux)" DestinationFolder="$(OutDir)\netkiwi\runtimes\linux-x64\native"
         />
     </Target>
 </Project>

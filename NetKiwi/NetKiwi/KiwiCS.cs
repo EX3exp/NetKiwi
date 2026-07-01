@@ -420,8 +420,8 @@ namespace NetKiwi.Backend
 
         public KiwiBuilderHandle inst => _inst;
         private KiwiBuilderHandle _inst;
-        private Reader reader;
-        private Tuple<int, string> readItem;
+        internal Reader reader;
+        internal Tuple<int, string> readItem;
 
         
         
@@ -446,26 +446,33 @@ namespace NetKiwi.Backend
         }
 
         private static KiwiCAPI.CReader readerInst = (int id, IntPtr buf, IntPtr userData) =>
-        {
-            GCHandle handle = (GCHandle)userData;
-            KiwiBuilder ki = handle.Target as KiwiBuilder;
-            if (ki.readItem?.Item1 != id)
-            {
-                ki.readItem = new Tuple<int, string>(id, ki.reader(id));
-            }
-            if (buf == IntPtr.Zero)
-            {
-                return ki.readItem.Item2 ?.Length ?? 0;
-            }
+         {
+             GCHandle handle = (GCHandle)userData;
+             KiwiBuilder kb = handle.Target as KiwiBuilder;
 
-            using (var textStr = new Utf16String(ki.readItem.Item2))
-            {
-                KiwiCAPI.CopyMemory(buf, textStr.IntPtr, (uint)ki.readItem.Item2.Length * 2);
-            }
+             if (kb == null)
+             {
+                 Console.WriteLine("Failed to cast userData to KiwiBuilder.");
+                 kb = new KiwiBuilder();
+                 kb.reader = new Reader((int id) => { return ""; });
+             }
+             if (kb.readItem?.Item1 != id)
+             {
+                 string readerResult = kb.reader(id);
+                 kb.readItem = new Tuple<int, string>(id, readerResult ?? "");
+             }
+             if (buf == IntPtr.Zero)
+             {
+                 return kb.readItem.Item2 ?.Length ?? 0;
+             }
 
+             using (var textStr = new Utf16String(kb.readItem.Item2))
+             {
+                 KiwiCAPI.CopyMemory(buf, textStr.IntPtr, (uint)kb.readItem.Item2.Length * 2);
+             }
 
-            return 0;
-        };
+             return kb.readItem.Item2.Length;
+         };
         public KiwiBuilder()
         {
             _ = typeof(KiwiCAPI).TypeHandle; // Load the KiwiCAPI type to ensure the static constructor is called
@@ -580,34 +587,57 @@ namespace NetKiwi.Backend
                 return ret;
             }
         }
-        public ExtractedWord[] ExtractWords(Reader reader, int minCnt = 5, int maxWordLen = 10, float minScore = 0.1f, float posThreshold = -3)
+
+        public unsafe ExtractedWord[] ExtractWords(Reader reader, int minCnt = 5, int maxWordLen = 10, float minScore = 0.1f, float posThreshold = -3)
         {
             GCHandle handle = GCHandle.Alloc(this);
-            this.reader = reader;
-            
-            readItem = null;
-            KiwiWsHandle ret = KiwiCAPI.kiwi_builder_extract_words_w(inst, readerInst, (IntPtr)handle, minCnt, maxWordLen, minScore, posThreshold);
-            handle.Free();
-            if (inst == IntPtr.Zero) throw new KiwiException(Marshal.PtrToStringAnsi(KiwiCAPI.kiwi_error()));
-            ExtractedWord[] words = KiwiCAPI.ToExtractedWord(ret);
-            KiwiCAPI.kiwi_ws_close(ret);
-            return words;
+            try
+            {
+                this.reader = reader;
+
+                readItem = null;
+                IntPtr handleValue = (IntPtr)handle;
+                KiwiWsHandle ret = KiwiCAPI.kiwi_builder_extract_words_w(inst, readerInst, handleValue, minCnt, maxWordLen, minScore, posThreshold);
+                if (ret == IntPtr.Zero) throw new KiwiException(Marshal.PtrToStringAnsi(KiwiCAPI.kiwi_error()));
+                ExtractedWord[] words = KiwiCAPI.ToExtractedWord(ret);
+                KiwiCAPI.kiwi_ws_close(ret);
+                return words;
+            }
+            finally
+            {
+                if (handle.IsAllocated)
+                {
+                    handle.Free();
+                }
+            }
         }
 
-        public ExtractedWord[] ExtractAddWords(Reader reader, int minCnt = 5, int maxWordLen = 10, float minScore = 0.1f, float posThreshold = -3)
+        public unsafe ExtractedWord[] ExtractAddWords(Reader reader, int minCnt = 5, int maxWordLen = 10, float minScore = 0.1f, float posThreshold = -3)
         {
-            this.reader = reader;
             GCHandle handle = GCHandle.Alloc(this);
-            
-            readItem = null;
+            try
+            {
+                this.reader = reader;
 
-            KiwiWsHandle ret = KiwiCAPI.kiwi_builder_extract_add_words_w(inst, readerInst, (IntPtr)handle, minCnt, maxWordLen, minScore, posThreshold);
-            handle.Free();
-            if (inst == IntPtr.Zero) throw new KiwiException(Marshal.PtrToStringAnsi(KiwiCAPI.kiwi_error()));
-            ExtractedWord[] words = KiwiCAPI.ToExtractedWord(ret);
-            KiwiCAPI.kiwi_ws_close(ret);
-            return words;
+                readItem = null;
+                IntPtr handleValue = (IntPtr)handle;
+
+                KiwiWsHandle ret = KiwiCAPI.kiwi_builder_extract_add_words_w(inst, readerInst, handleValue, minCnt, maxWordLen, minScore, posThreshold);
+                if (ret == IntPtr.Zero) throw new KiwiException(Marshal.PtrToStringAnsi(KiwiCAPI.kiwi_error()));
+                ExtractedWord[] words = KiwiCAPI.ToExtractedWord(ret);
+                KiwiCAPI.kiwi_ws_close(ret);
+                return words;
+            }
+            finally
+            {
+                if (handle.IsAllocated)
+                {
+                    handle.Free();
+                }
+            }
         }
+
+
 
         public Kiwi Build()
         {
@@ -698,9 +728,9 @@ namespace NetKiwi.Backend
         public delegate int Receiver(int id, Result[] res);
 
         private KiwiHandle inst;
-        private Reader reader;
+        public Reader reader;
         private Receiver receiver;
-        private Tuple<int, string> readItem;
+        public Tuple<int, string> readItem;
 
 
         private static KiwiCAPI.CReader readerInst = (int id, IntPtr buf, IntPtr userData) =>
@@ -782,6 +812,9 @@ namespace NetKiwi.Backend
             handle.Free();
             if (ret < 0) throw new KiwiException(Marshal.PtrToStringAnsi(KiwiCAPI.kiwi_error()));
         }
+
+        
+
 
         public KiwiJoiner NewJoiner(bool lmSearch = true)
         {

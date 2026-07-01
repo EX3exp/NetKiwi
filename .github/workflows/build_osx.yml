@@ -21,7 +21,7 @@ jobs:
         dotnet-version: 8.x
     
     - name: Restore dependencies - macOS
-      run: nuget restore NetKiwi/NetKiwi/NetKiwi.csproj
+      run: dotnet restore NetKiwi/NetKiwi/NetKiwi.csproj
 
     - name: Build - macOS
       run: |
